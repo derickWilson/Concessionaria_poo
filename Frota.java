@@ -2,15 +2,13 @@ import java.util.ArrayList;
 public class Frota{
     private ArrayList<Veiculo> frota = new ArrayList<Veiculo>();
 
-    public Frota(Veiculo veiculo){
-        this.insert(new Veiculo(
-                                String placa, 
+    public Frota(Veiculo veiculo = new (String placa, 
                                 String marca,
                                 String modelo,
                                 String cor,
                                 String anoFabricacao,
-                                String nomeGrupo)
-                                );
+                                String nomeGrupo)){
+        this.insert(veiculo);
     }
 
     public boolean insert(Veiculo veiculo){
