@@ -29,6 +29,8 @@ public class Frota{
             //se a placa ja estiver em um veiculo da frota retorna true
             if(i.getPlaca() == placa){
                 return true;
+            }else{
+                return false;
             }
         }
 
