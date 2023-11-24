@@ -7,7 +7,7 @@ public class Frota{
     }
 
     public boolean insert(Veiculo veiculo){
-        try {
+        try {//troca essa merda
             if(validaInsert(veiculo.getPlaca())){
                 frota.add(veiculo);
                 return true;
@@ -39,7 +39,7 @@ public class Frota{
     }
 
     public boolean removeVeiculo(String placa){
-        for(Veiculo i : frota){
+        for(Veiculo i : frota){//terminar
             if(i.getPlaca() == placa){
                 frota.remove(i);
                 return true;
