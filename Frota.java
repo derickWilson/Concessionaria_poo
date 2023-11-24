@@ -3,26 +3,26 @@ public class Frota{
     private ArrayList<Veiculo> frota = new ArrayList<Veiculo>();
 
     public Frota(Veiculo veiculo)){
-        this.insert(veiculo);
+        this.insertVeiculo(veiculo);
     }
 
-    public boolean insert(Veiculo veiculo){
+    public int insertVeiculo(Veiculo veiculo){
         try {//troca essa merda
-            if(validaInsert(veiculo.getPlaca())){
+            if(!existePlaca(veiculo.getPlaca())){
                 frota.add(veiculo);
-                return true;
+                return 0;
             }else{
                 System.out.println("o veiculo ja esta na frota");
-                return true;
+                return 1;
             }
         } catch (Exception e) {
             System.err.println(e.toString());
-            return false;
+            return 2;
         }
     }
-
-    public boolean validaInsert(String placa){
-        
+//metodo para checar formato da placa
+    private boolean existePlaca(String placa){
+    
         //loop para percorrer a frota
         for(Veiculo i : frota){
 
