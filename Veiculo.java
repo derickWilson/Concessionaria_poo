@@ -73,4 +73,8 @@ public class Veiculo{
     public void setStatus(String status){
         this.Status = status;
     }
+
+    private boolean checkPlaca(String placa){
+        String padrao = "[A-Z]{3}\\d[A-Z]{2}";
+    }
 }
