@@ -23,7 +23,7 @@ public class Frota{
     }
 //metodo para checar formato da placa
     private boolean existePlaca(String placa){
-                
+              String pattern = "^[A-Z]{3}\\d[A-Z]{2}";  
     }
     
         //loop para percorrer a frota
