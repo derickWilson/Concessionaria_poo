@@ -1,4 +1,4 @@
-package trabalho.trabalhopoo;
+package moduloGerencia;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -8,119 +8,129 @@ import java.io.IOException;
 import java.io.FileNotFoundException;
 import java.io.File;
 import java.time.LocalDate;
-/*
-+ getParametros:String[][] (feito)
-+ getVeiculos:String[][] (feito)
-+ getLocacoes:String[][] (feito)
-+ getClientes:String[][] (feito)
-+ setParametros:void (feito)
-+ setVeiculos:void (feito)
-+ setLocacoes:void (feito)
-+ setClientes:void (feito)
-- lerArquivo: String[][](parcialmente feito)(temos que decidir a estrutura de diretorios)
-- escreverNoArquivo: void (parcialmente feito)(temos que decidir a estrutura de diretorios)
-*/
+import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+
 public class Arquivos {  
-    
+    //metodos get chamam o metodo lerArquivo que le o arquivo indicado em cada metodo
     public static String[][] getParametros(){
         String[][] parametros;
         
+        //le a String[][] direto do arquivo
         parametros = lerArquivo("parametros.txt", 6);
         
+        //checa se o arquivo esta vazio
         if(parametros == null){
             System.err.println("ERRO: desconhecido!");
         }
         return parametros;
     }
     
-    public static String[][] getVeiculos(){     
-        String[][] veiculos;
-     
-        veiculos = lerArquivo("veiculos.txt", 7);
+    public static ArrayList<Veiculo> getVeiculos(){     
+        String[][] matriz;
+        ArrayList<Veiculo> veiculos = new ArrayList<>();
         
-        if(veiculos == null){
+        //le a String[][] direto do arquivo
+        matriz = lerArquivo("veiculos.txt", 7);
+        
+        //checa se o arquivo esta vazio
+        if(matriz == null){
             System.err.println("Nenhum veiculo encontrado!");
+            return null;
+        }
+        //transformar a String[][] em ArrayList<Veiculo>
+        try{
+            for(int i = 0;i < matriz.length;++i){
+                //Veiculo(String placa, String marca, String modelo, String cor, String anoFabricacao, String nomeGrupo, String status)
+                veiculos.add(new Veiculo(matriz[i][0], matriz[i][1], matriz[i][2], matriz[i][3], matriz[i][4], matriz[i][5], matriz[i][6]));                      
+            }
+        }catch(Exception erro){
+            System.err.println("ERRO: "+erro);
         }
         return veiculos;       
      }
     
-    public static String[][] getLocacoes(){
-        String[][] locacoes;
-     
-        locacoes = lerArquivo("locacoes.txt", 7);
+    public static ArrayList<Locacao> getLocacoes(){
+        String[][] matriz;
+        ArrayList <Locacao> locacoes = new ArrayList<>();
         
-        if(locacoes == null){
+        //le a String[][] direto do arquivo
+        matriz = lerArquivo("locacoes.txt", 7);
+        
+        //checa se o arquivo esta vazio
+        if(matriz == null){
             System.err.println("Nenhuma locacao encontrada!");
+            return null;
+        }      
+        //transformar a String[][] em ArrayList<Locacao>
+        try{
+            for(int i = 0;i < matriz.length;++i){
+                //Locacao(long Identificador,String CPFCliente, String Placa, LocalDate DataRetirada, LocalDate DataDevolucao, float ValorLocacao, String Status)
+                locacoes.add(new Locacao(Long.parseLong(matriz[i][0]), matriz[i][1], matriz[i][2], LocalDate.parse(matriz[i][3]), 
+                        LocalDate.parse(matriz[i][4]), Float.parseFloat(matriz[i][5]), matriz[i][6]));                      
+            }
+        }catch(DateTimeParseException dtpe){
+            System.err.println("ERRO: "+dtpe);
+        }catch(NumberFormatException nfe){
+            System.err.println("ERRO: "+nfe);
         }
         return locacoes;   
     }
     
-    public static String[][] getClientes(){
-        String[][] clientes;
-     
-        clientes = lerArquivo("clientes.txt", 5);
+    public static ArrayList<Cliente> getClientes(){
+        String[][] matriz;
+        ArrayList<Cliente> clientes = new ArrayList<>();
         
-        if(clientes == null){
+        //le a String[][] direto do arquivo
+        matriz = lerArquivo("clientes.txt", 5);
+        
+        //checa se o arquivo esta vazio
+        if(matriz == null){
             System.err.println("Nenhum cliente encontrado!");
+            return null;
+        }
+        //transformar a String[][] em ArrayList<Cliente>
+        try{
+            for(int i = 0;i < matriz.length;++i){
+                //Clientes(String CPF, String NomeCliente, LocalDate DataNascimento, String Email, String NumeroCelular)
+                clientes.add(new Cliente(matriz[i][0], matriz[i][1], LocalDate.parse(matriz[i][2]), matriz[i][3], matriz[i][4]));                      
+            }
+        }catch(DateTimeParseException dtpe){
+            System.err.println("ERRO: "+dtpe);
         }
         return clientes;
     }
     
-    //AQUI NOS SETS EU POSSO MUDAR OS PARAMETROS DE ENTRADA PARA OS OBJETOS. O append precisa ficar
+    //metodos set chamam metodo escreverNoArquivo e passam o texto, o nome do arquivo e o append para o metodo
     public static void setParametros(String NomeDoGrupo, float ValorDiaria, float ValorTanque, float ValorLimpezaExt, float ValorLimpezaInt, float DiariaSeguro, boolean append){
-        String parametro = String.format("<%s><TAB><%f><TAB><%f><TAB><%f><TAB><%f><TAB><%f><EndOfLine>",
-                NomeDoGrupo,
-                ValorDiaria,
-                ValorTanque,
-                ValorLimpezaExt,
-                ValorLimpezaInt,
-                DiariaSeguro);
-        escreverNoArquivo(parametro, "parametros.txt", append);
+        String texto = NomeDoGrupo+"\t"+ValorDiaria+"\t"+ValorTanque+"\t"+ValorLimpezaExt+"\t"+ValorLimpezaInt+"\t"+DiariaSeguro+"\n";                          
+        escreverNoArquivo(texto, "parametros.txt", append);
     }
     
-    public static void setVeiculos(String Placa, String Marca, String Modelo, String Cor, String AnoFabricacao, String NomeDoGrupo, String Status, boolean append){
-        String veiculo = String.format("<%s><TAB><%s><TAB><%s><TAB><%s><TAB><%s><TAB><%s><TAB><%s><EndOfLine>",
-                Placa, 
-                Marca, 
-                Modelo,
-                Cor,
-                AnoFabricacao,
-                NomeDoGrupo,
-                Status);
-        escreverNoArquivo(veiculo, "veiculos.txt", append);
+    public static void setVeiculos(Veiculo veiculo, boolean append){
+        String texto = veiculo.getPlaca()+"\t"+veiculo.getMarca()+"\t"+veiculo.getModelo()+"\t"+veiculo.getCor()+"\t"+veiculo.getAnoFabricacao()+"\t"+veiculo.getNomeGrupo()+"\t"+veiculo.getStatus()+"\n";
+        escreverNoArquivo(texto, "veiculos.txt", append);
     }
     
-    public static void setLocacoes(long Identificador,String CPFCliente, String Placa, LocalDate DataRetirada, LocalDate DataDevolucao, float ValorLocacao, String Status, boolean append){
-        String locacao = String.format("<%d><TAB><%s><TAB><%s><TAB><%s><TAB><%s><TAB><%f><TAB><%s><EndOfLine>",
-                Identificador,
-                CPFCliente,
-                Placa,
-                DataRetirada,
-                DataDevolucao,
-                ValorLocacao,
-                Status);
-        escreverNoArquivo(locacao, "locacoes.txt", append);
+    public static void setLocacoes(Locacao locacao, boolean append){
+        String texto = locacao.getIdentificador()+"\t"+locacao.getCPFCliente()+"\t"+locacao.getPlaca()+"\t"+locacao.getDataRetirada()+"\t"+locacao.getDataDevolucao()+"\t"+locacao.getValorLocacao()+"\t"+locacao.getStatus()+"\n";
+        escreverNoArquivo(texto, "locacoes.txt", append);
     }
     
-    public static void setClientes(String CPF, String NomeCliente, LocalDate DataNascimento, String Email, String NumeroCelular, boolean append){
-        String cliente = String.format("<%s><TAB><%s><TAB><%s><TAB><%s><TAB><%s><EndOfLine>",
-                CPF,
-                NomeCliente,
-                DataNascimento,
-                Email,
-                NumeroCelular);
-        escreverNoArquivo(cliente, "clientes.txt", append);
+    public static void setClientes(Cliente cliente, boolean append){
+        String texto = cliente.getCPF()+"\t"+cliente.getNomeCliente()+"\t"+cliente.getDataNascimento()+"\t"+cliente.getEmail()+"\t"+cliente.getNumeroCelular()+"\n";
+        escreverNoArquivo(texto , "clientes.txt", append);
     }
     
     //metodos auxiliares  
     private static String[][] lerArquivo(String nomeArquivo, int qntColunas){
         String[][] matriz = null;
-        String aux = "";       
+        String lerLinha, aux = "";       
         BufferedReader reader = null;
         File file;
         int qntLinhas, linha, coluna, i, j;
         try{
-            file = new File("src\\main\\java\\trabalho\\trabalhopoo\\"+nomeArquivo);
+            file = new File("src"+File.separatorChar+"moduloGerencia"+File.separatorChar+nomeArquivo);
             if(!file.exists()){
                 System.err.println("\nArquivo '"+nomeArquivo+"' nao foi encontrado!\nCriando arquivo...\n");
                 file.createNewFile();
@@ -129,18 +139,26 @@ public class Arquivos {
             //ler arquivo
             qntLinhas = 0;
             while(reader.ready()){
-                aux += reader.readLine();
+                lerLinha = reader.readLine();            
+                if(!lerLinha.equals("")){
+                    aux += lerLinha+"\n";
+                }      
                 ++qntLinhas;
-            }           
+            }       
             //checar se arquivo está vazio 
             if(aux.equals("")){
                 if(nomeArquivo.equals("parametros.txt")){             
-                    //setar default
+                    //setar default se for o arquivo parametros
                     setParametros("basico", 0 , 0, 0, 0, 0, false);
                     setParametros("padrao", 0 , 0, 0, 0, 0, true);
                     setParametros("premium", 0 , 0, 0, 0, 0, true);        
                     //ler de novo
-                    while(reader.ready()){aux += reader.readLine();}
+                    while(reader.ready()){
+                        lerLinha = reader.readLine();            
+                        if(!lerLinha.equals("")){
+                            aux += lerLinha+"\n";
+                        }  
+                    }
                     qntLinhas = 3;                                     
                 }else{
                     return null;
@@ -151,28 +169,22 @@ public class Arquivos {
             i = 0;
             linha = 0;
             coluna = 0;
-            while(i < aux.length()){
-                if(aux.charAt(i) == '<'){
-                    j = i+1;
-                    while(aux.charAt(j) != '>'){
-                        ++j;
-                    }                   
-                    switch (aux.substring(i, j+1)) {
-                        case "<TAB>":
-                            ++coluna;
-                            break;
-                        case "<EndOfLine>":
-                            ++linha;
-                            coluna = 0;                           
-                            break;                       
-                        default:                          
-                            matriz[linha][coluna] = aux.substring(i+1, j);                                               
-                            break;
-                    }                   
-                    i = j+1;
-                }else{
-                    ++i;
-                }
+            while(i < aux.length() && linha < qntLinhas){
+                //verifica se essa parte da string (de j=i até j = i que é na verdade i+1 por conta do metodo substring que tem -1 por padrao) é um /t ou /n              
+                j = i;
+                while(!aux.substring(j, j+1).contains("\t")&&!aux.substring(j, j+1).contains("\n")){                   
+                    j++;                   
+                }                             
+                //apos encontrar um \t ou \n, seleciona a parte da string de i (onde comecou a busca) até j-1 (que é j pois o metodo tem -1 e representa o caractere anterior a \t ou \n) 
+                matriz[linha][coluna] = aux.substring(i,j);
+                ++coluna;
+                //proxima linha
+                if(aux.substring(j, j+1).contains("\n")){
+                    ++linha;
+                    coluna = 0;
+                }                                                                              
+                //i vai para j+2 (o caracter posterior a \t)
+                i = j+1;
             }          
         }catch(FileNotFoundException fnfe){
             System.err.println("ERRO: " + fnfe);        
@@ -194,15 +206,14 @@ public class Arquivos {
         File file;
         BufferedWriter writer = null;    
         try{
-            file = new File("src\\main\\java\\trabalho\\trabalhopoo\\"+nomeArquivo);
+            file = new File("src"+File.separatorChar+"moduloGerencia"+File.separatorChar+nomeArquivo);
             if(!file.exists()){
-                System.err.println("\nArquivo '"+nomeArquivo+"' não foi encontrado!\nCriando arquivo...");
+                System.err.println("\nArquivo '"+nomeArquivo+"' nao foi encontrado!\nCriando arquivo...");
                 file.createNewFile();           
             }
             //o append = true deve ser usado apenas na primeira insercao do FileWriter para o arquivo ser sobrescrito
             writer =  new BufferedWriter(new FileWriter(file.getAbsolutePath(), append));           
-            writer.write(entrada);
-            writer.newLine();                    
+            writer.write(entrada);                    
         }catch(IOException ioe){
             System.err.println("ERRO: " + ioe);
         }finally{
