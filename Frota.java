@@ -40,11 +40,9 @@ public class Frota{
 
     public boolean removeVeiculo(String placa){
         for(Veiculo i : frota){//terminar
+for(Veiculo i : frota){
             if(i.getPlaca() == placa){
                 frota.remove(i);
                 return true;
             }
         }
-        return false;
-    }
-}
