@@ -21,11 +21,8 @@ public class Frota{
             return 2;
         }
     }
-//metodo para checar formato da placa
-    private boolean existePlaca(String placa){
-              String pattern = "^[A-Z]{3}\\d[A-Z]{2}";  
-    }
-    
+//metodo para checar formato da plac
+    public boolean checkPlaca(){
         //loop para percorrer a frota
         for(Veiculo i : frota){
 
