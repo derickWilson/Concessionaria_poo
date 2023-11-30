@@ -25,15 +25,11 @@ public class Frota{
     public boolean checkPlaca(){
         //loop para percorrer a frota
         for(Veiculo i : frota){
-
             //se a placa ja estiver em um veiculo da frota retorna true
             if(i.getPlaca() == placa){
                 return true;
-            }else{
-                return false;
             }
         }
-
         //caso a placa não esteja na frota retorna false, o objeto não foi cadastrado
         return false;
     }
