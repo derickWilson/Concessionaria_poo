@@ -30,7 +30,7 @@ public class Veiculo {
     public void setPlaca(String placa) {
         // checar se a placa é valida
         if (checarPlaca(placa)) {
-            this.Placa = placa;
+            this.Placa = placa.toUpperCase();
         } else {
             System.out.err("Formato de placa inválido");
             System.out.err("LLLNNLNN");
